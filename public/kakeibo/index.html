@@ -8,11 +8,14 @@
 <meta name="apple-mobile-web-app-title" content="家計ノート">
 <link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
-  // ホーム画面のアイコンから開いたとき（?go 付き）は、すぐに家計ノートへ移動する
+  // ホーム画面のアイコンから開いたときだけ、すぐに家計ノートへ移動する（Safariで普通に開いたときは移動しない）
   var NOTE_URL = "https://claude.ai/artifact/59GYBu1W22iNxh3ta4pGjT";
-  if (/[?&]go\b/.test(location.search)) { location.replace(NOTE_URL); }
+  var fromHome = window.navigator.standalone === true || (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches);
+  if (fromHome) { location.replace(NOTE_URL); }
 </script>
 <style>
   :root{ --bg:#f3e3cb; --card:#fffaf2; --ink:#3a2f26; --sub:#7d6c5c; --accent:#5c8f4a; }
@@ -41,9 +44,5 @@
     </ol>
     <a class="open" id="openLink" href="https://claude.ai/artifact/59GYBu1W22iNxh3ta4pGjT">家計ノートを開く</a>
   </div>
-<script>
-  // ホーム画面に追加されるURLを「?go」付きにしておく（アイコンから開くとすぐ家計ノートへ移動する）
-  try { history.replaceState(null, "", location.pathname + "?go"); } catch (e) {}
-</script>
 </body>
 </html>
