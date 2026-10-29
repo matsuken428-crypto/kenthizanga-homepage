@@ -352,15 +352,6 @@
 </head>
 <body>
 <div class="app">
-  <div class="owner-line">
-    <span>記録する人：<b id="ownerName">未設定</b></span>
-    <button class="link-btn" id="ownerEditBtn">変更</button>
-  </div>
-  <div class="owner-edit" id="ownerEdit">
-    <input type="text" id="ownerInput" placeholder="例：妻、自分">
-    <button id="ownerSaveBtn">決定</button>
-  </div>
-
   <div class="month-bar">
     <button id="prevBtn" aria-label="前の月">&#8592;</button>
     <div class="month-label" id="monthLabel">-</div>
@@ -386,7 +377,15 @@
   <ul class="entries" id="entriesList"></ul>
 
   <div class="export-box">
-    <p>月末に押すと、この月の記録をまとめたファイルができます。できたファイルを家計ノートに入れると、自動で仕分けて集計されます。</p>
+    <p>月末に押すと、この月の記録をまとめたファイルができます。</p>
+    <div class="owner-line">
+      <span>ファイルに入れる名前：<b id="ownerName">未設定</b></span>
+      <button class="link-btn" id="ownerEditBtn">変更</button>
+    </div>
+    <div class="owner-edit" id="ownerEdit">
+      <input type="text" id="ownerInput" placeholder="例：妻、自分">
+      <button id="ownerSaveBtn">決定</button>
+    </div>
     <button class="export-btn" id="exportBtn">この月のファイルを作成</button>
     <div class="status" id="exportStatus"></div>
   </div>
@@ -644,7 +643,7 @@ async function exportMonth(){
   if(!owner){
     document.getElementById('ownerEdit').style.display = 'flex';
     document.getElementById('ownerInput').focus();
-    setStatus('先に「記録する人」の名前を入れてください', true, 'exportStatus');
+    setStatus('先にファイルに入れる名前（例：妻）を入れてください', true, 'exportStatus');
     return;
   }
   const entries = (await loadEntries()).slice().sort((a,b)=> a.ts - b.ts);
