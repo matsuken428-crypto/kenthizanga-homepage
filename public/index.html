@@ -843,4 +843,18 @@ document.getElementById('modal-overlay').addEventListener('click',function(e){if
 </script>
 
 
-<div id="extension-dpfof"></div><div id="extension-dpfof"></div><div id="extension-dpfof"></div></body></html>
+<div id="extension-dpfof"></div><div id="extension-dpfof"></div><div id="extension-dpfof"></div><script id="live-update">
+/* 最新のスタッツとnote・ラジオのリンクを /api/latest から取得して差し替える（失敗時はHTMLの値をそのまま表示） */
+(function(){
+  function setText(id,v){var e=document.getElementById(id);if(e&&v!=null&&v!=='')e.textContent=v;}
+  function setHref(id,v){var e=document.getElementById(id);if(e&&v)e.href=v;}
+  fetch('/api/latest').then(function(r){return r.ok?r.json():null;}).then(function(d){
+    if(!d)return;
+    if(d.stats){setText('stat-matches',d.stats.matches);setText('stat-goals',d.stats.goals);setText('stat-assists',d.stats.assists);}
+    ['note','radio'].forEach(function(k){
+      (d[k]||[]).slice(0,3).forEach(function(it,i){setText(k+'-art'+(i+1),it.title);setHref(k+'-art-link'+(i+1),it.url);});
+    });
+  }).catch(function(){});
+})();
+</script>
+</body></html>

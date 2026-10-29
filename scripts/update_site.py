@@ -44,7 +44,7 @@ def set_input(doc, el_id, value):
 
 def main():
     data = json.load(open(sys.argv[1], encoding="utf-8"))
-    path = sys.argv[2] if len(sys.argv) > 2 else "index.html"
+    path = sys.argv[2] if len(sys.argv) > 2 else "public/index.html"
     doc = open(path, encoding="utf-8").read()
     before = doc
 
