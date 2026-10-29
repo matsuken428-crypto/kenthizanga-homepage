@@ -854,6 +854,7 @@ document.getElementById('modal-overlay').addEventListener('click',function(e){if
     ['note','radio'].forEach(function(k){
       (d[k]||[]).slice(0,3).forEach(function(it,i){setText(k+'-art'+(i+1),it.title);setHref(k+'-art-link'+(i+1),it.url);});
     });
+    (d.podcast||[]).slice(0,3).forEach(function(it,i){setText('podcast-ep'+(i+1),it.title);setHref('podcast-ep-link'+(i+1),it.url);});
   }).catch(function(){});
 })();
 </script>

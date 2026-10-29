@@ -43,15 +43,39 @@ async function fetchStats() {
   return { matches: Number(m[1]), goals: Number(m[2]), assists: Number(m[3]) };
 }
 
+const PODCAST_ID = "1887278282";
+
+async function fetchPodcast() {
+  const res = await fetch(
+    `https://itunes.apple.com/lookup?id=${PODCAST_ID}&entity=podcastEpisode&country=jp&limit=10`,
+    { headers: { "user-agent": UA, accept: "application/json" } }
+  );
+  if (!res.ok) throw new Error(`podcast ${res.status}`);
+  const json = await res.json();
+  const episodes = (json?.results ?? [])
+    .filter((r) => r.wrapperType === "podcastEpisode" && r.trackName && r.trackViewUrl)
+    .sort((a, b) => String(b.releaseDate).localeCompare(String(a.releaseDate)))
+    .slice(0, 3)
+    .map((r) => ({ title: r.trackName.replace(/\s+/g, " ").trim(), url: r.trackViewUrl.split("&uo=")[0] }));
+  if (!episodes.length) throw new Error("podcast episodes not found");
+  return episodes;
+}
+
 export default async () => {
-  const [noteResult, statsResult] = await Promise.allSettled([fetchNote(), fetchStats()]);
+  const [noteResult, statsResult, podcastResult] = await Promise.allSettled([
+    fetchNote(),
+    fetchStats(),
+    fetchPodcast(),
+  ]);
   const body = { updatedAt: new Date().toISOString() };
   if (noteResult.status === "fulfilled") Object.assign(body, noteResult.value);
   else body.noteError = String(noteResult.reason);
   if (statsResult.status === "fulfilled") body.stats = statsResult.value;
   else body.statsError = String(statsResult.reason);
+  if (podcastResult.status === "fulfilled") body.podcast = podcastResult.value;
+  else body.podcastError = String(podcastResult.reason);
 
-  const ok = noteResult.status === "fulfilled" && statsResult.status === "fulfilled";
+  const ok = [noteResult, statsResult, podcastResult].every((r) => r.status === "fulfilled");
   return new Response(JSON.stringify(body), {
     headers: {
       "content-type": "application/json; charset=utf-8",
