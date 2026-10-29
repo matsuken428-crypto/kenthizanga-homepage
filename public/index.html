@@ -112,7 +112,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 /* SNS */
 #sns-section{background:var(--white);padding:100px 56px;border-top:1px solid var(--gray-light);}
 .sns-inner{max-width:1100px;margin:0 auto;}
-.sns-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--gray-light);margin-top:40px;border:1px solid var(--gray-light);}
+.sns-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--gray-light);margin-top:40px;border:1px solid var(--gray-light);}
 .sns-card{background:var(--white);padding:40px 28px;text-decoration:none;color:var(--text);transition:background 0.25s;display:block;position:relative;}
 .sns-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--gold);transform:scaleX(0);transition:transform 0.3s;transform-origin:left;}
 .sns-card:hover{background:var(--off-white);}
@@ -125,6 +125,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 #shop-section{background:var(--off-white);padding:100px 56px;border-top:1px solid var(--gray-light);}
 .shop-inner{max-width:1100px;margin:0 auto;}
 .shop-coming{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,5vw,64px);font-weight:300;font-style:italic;color:rgba(10,10,10,0.1);letter-spacing:4px;text-align:center;margin:40px 0;line-height:1;}
+.shop-links{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1px;background:var(--gray-light);border:1px solid var(--gray-light);margin-top:32px;}
 .product-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px;margin-top:32px;}
 .product-card{background:var(--white);border:1px solid var(--gray-light);padding:28px 22px;position:relative;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;text-decoration:none;display:block;color:var(--text);}.product-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(201,168,76,0.15);}
 .product-name{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;margin-bottom:4px;}
@@ -175,6 +176,7 @@ footer{background:var(--black);padding:36px 56px;display:flex;justify-content:sp
   
   .podcast-inner{grid-template-columns:1fr;gap:40px;}
   .sns-grid{grid-template-columns:1fr 1fr;}
+  .sns-grid .sns-card:last-child:nth-child(odd){grid-column:1/-1;}
   .hero-content{padding:0 22px 56px;}
   .hero-ctas{gap:10px;}
   .hero-cta-primary,.hero-cta-secondary{font-size:10px;padding:10px 20px;letter-spacing:3px;}
@@ -399,7 +401,6 @@ footer{background:var(--black);padding:36px 56px;display:flex;justify-content:sp
     <div class="sns-grid">
       <a href="https://www.instagram.com/ken_tshizanga/" class="sns-card" id="sns-instagram" target="_blank"><span class="sns-icon">📸</span><div class="sns-name">Instagram</div><div class="sns-handle" id="sns-ig-handle">@ken_tshizanga</div></a>
       <a href="https://note.com/ken_tshizanga" class="sns-card" id="sns-note" target="_blank"><span class="sns-icon">📝</span><div class="sns-name">note</div><div class="sns-handle" id="sns-note-handle">@ken_tshizanga</div></a>
-      <a href="https://www.threads.com/@ken_tshizanga" class="sns-card" id="sns-threads" target="_blank"><span class="sns-icon">🧵</span><div class="sns-name">Threads</div><div class="sns-handle" id="sns-threads-handle">@ken_tshizanga</div></a>
       <a href="https://podcasts.apple.com/jp/podcast/%E6%9D%BE%E6%9C%AC%E3%82%B1%E3%83%B3%E3%83%81%E3%82%B6%E3%83%B3%E3%82%AC/id1887278282" class="sns-card" id="sns-podcast-link" target="_blank"><span class="sns-icon">🎙️</span><div class="sns-name">Podcast</div><div class="sns-handle" id="sns-podcast-handle">松本ケンチザンガ</div></a>
     </div>
   </div>
@@ -412,6 +413,9 @@ footer{background:var(--black);padding:36px 56px;display:flex;justify-content:sp
     <div class="divider"></div>
     <div class="shop-coming" id="shop-coming-text" style="display: block;">Coming Soon</div>
     <div class="product-grid" id="product-grid"></div>
+    <div class="shop-links" id="shop-links">
+      <a href="https://www.instagram.com/kentshi_zanga/" class="sns-card" id="shop-apparel-ig" target="_blank"><span class="sns-icon">📸</span><div class="sns-name">Apparel Instagram</div><div class="sns-handle">@kentshi_zanga</div></a>
+    </div>
   </div>
 </div>
 
@@ -533,8 +537,6 @@ footer{background:var(--black);padding:36px 56px;display:flex;justify-content:sp
       <label>Instagram URL</label><input type="text" id="edit-ig-url" value="https://www.instagram.com/ken_tshizanga/">
       <label>note Handle</label><input type="text" id="edit-note-handle" value="@ken_tshizanga">
       <label>note URL</label><input type="text" id="edit-note-url" value="https://note.com/ken_tshizanga">
-      <label>Threads Handle</label><input type="text" id="edit-threads-handle" value="@ken_tshizanga">
-      <label>Threads URL</label><input type="text" id="edit-threads-url" value="https://www.threads.com/@ken_tshizanga">
       <label>Podcast Handle</label><input type="text" id="edit-podcast-handle" value="松本ケンチザンガ">
       <label>Podcast URL（SNS欄）</label><input type="text" id="edit-podcast-sns-url" value="https://podcasts.apple.com/jp/podcast/%E6%9D%BE%E6%9C%AC%E3%82%B1%E3%83%B3%E3%83%81%E3%82%B6%E3%83%B3%E3%82%AC/id1887278282">
     </div>
@@ -660,8 +662,6 @@ function saveAll(){
   document.getElementById('sns-instagram').href=document.getElementById('edit-ig-url').value;
   document.getElementById('sns-note-handle').textContent=document.getElementById('edit-note-handle').value;
   document.getElementById('sns-note').href=document.getElementById('edit-note-url').value;
-  document.getElementById('sns-threads-handle').textContent=document.getElementById('edit-threads-handle').value;
-  document.getElementById('sns-threads').href=document.getElementById('edit-threads-url').value;
   document.getElementById('sns-podcast-handle').textContent=document.getElementById('edit-podcast-handle').value;
   document.getElementById('sns-podcast-link').href=document.getElementById('edit-podcast-sns-url').value;
   document.getElementById('shop-coming-text').textContent=document.getElementById('edit-shop-coming').value;
@@ -745,8 +745,6 @@ function syncModalInputs(){
   sv('edit-ig-url','sns-instagram','href');
   sv('edit-note-handle','sns-note-handle','text');
   sv('edit-note-url','sns-note','href');
-  sv('edit-threads-handle','sns-threads-handle','text');
-  sv('edit-threads-url','sns-threads','href');
   sv('edit-podcast-handle','sns-podcast-handle','text');
   sv('edit-podcast-sns-url','sns-podcast-link','href');
   sv('edit-podcast-url','podcast-url','href');
