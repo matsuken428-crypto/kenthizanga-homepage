@@ -122,13 +122,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .sns-handle{font-size:11px;color:var(--gray-mid);margin-top:4px;font-family:'Cormorant Garamond',serif;font-style:italic;}
 
 /* APP ICONS (SNS / SHOP) */
-.app-icon{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:0 2px 8px rgba(0,0,0,0.08);}
-.app-icon::before{content:'';width:58%;height:58%;background:#fff;-webkit-mask:var(--glyph) center/contain no-repeat;mask:var(--glyph) center/contain no-repeat;}
-.app-icon--instagram{--glyph:url('https://cdn.jsdelivr.net/npm/simple-icons@16.36.0/icons/instagram.svg');background:radial-gradient(circle at 30% 107%,#fdf497 0%,#fdf497 5%,#fd5949 45%,#d6249f 60%,#285AEB 90%);}
-.app-icon--note{--glyph:url('https://cdn.jsdelivr.net/npm/simple-icons@16.36.0/icons/note.svg');background:#fff;border:1px solid var(--gray-light);}
-.app-icon--note::before{background:#000;}
-.app-icon--podcast{--glyph:url('https://cdn.jsdelivr.net/npm/simple-icons@16.36.0/icons/applepodcasts.svg');background:linear-gradient(180deg,#F452FF 0%,#832BC1 100%);}
-.app-icon--shop{--glyph:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 7h12l1 14H5L6 7z' fill='none' stroke='black' stroke-width='2' stroke-linejoin='round'/%3E%3Cpath d='M9 9V6a3 3 0 0 1 6 0v3' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");background:#0a0a0a;}
+.app-icon{width:56px;height:56px;border-radius:22.5%;display:block;margin:0 auto 16px;object-fit:cover;box-shadow:0 0 0 1px rgba(0,0,0,0.06),0 3px 10px rgba(0,0,0,0.10);}
 .sns-grid .sns-card,.shop-links .sns-card{text-align:center;}
 .shop-links{grid-template-columns:1fr 1fr !important;}
 #shop-coming-text{display:none !important;}
@@ -417,9 +411,9 @@ footer{background:var(--black);padding:36px 56px;display:flex;justify-content:sp
     <p class="section-label">FOLLOW</p>
     <h2 class="section-title">SNS</h2>
     <div class="sns-grid">
-      <a href="https://www.instagram.com/ken_tshizanga/" class="sns-card" id="sns-instagram" target="_blank"><span class="app-icon app-icon--instagram" aria-hidden="true"></span><div class="sns-name">Instagram</div><div class="sns-handle" id="sns-ig-handle">@ken_tshizanga</div></a>
-      <a href="https://note.com/ken_tshizanga" class="sns-card" id="sns-note" target="_blank"><span class="app-icon app-icon--note" aria-hidden="true"></span><div class="sns-name">note</div><div class="sns-handle" id="sns-note-handle">@ken_tshizanga</div></a>
-      <a href="https://podcasts.apple.com/jp/podcast/%E6%9D%BE%E6%9C%AC%E3%82%B1%E3%83%B3%E3%83%81%E3%82%B6%E3%83%B3%E3%82%AC/id1887278282" class="sns-card" id="sns-podcast-link" target="_blank"><span class="app-icon app-icon--podcast" aria-hidden="true"></span><div class="sns-name">Podcast</div><div class="sns-handle" id="sns-podcast-handle">松本ケンチザンガ</div></a>
+      <a href="https://www.instagram.com/ken_tshizanga/" class="sns-card" id="sns-instagram" target="_blank"><img class="app-icon" src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/44/b0/cc/44b0cc3a-e91f-2824-d98f-3e5e095a73f3/Prod-0-0-1x_U007epad-0-0-0-1-0-0-sRGB-85-220.png/256x256bb.png" alt="" aria-hidden="true" width="56" height="56" loading="lazy"><div class="sns-name">Instagram</div><div class="sns-handle" id="sns-ig-handle">@ken_tshizanga</div></a>
+      <a href="https://note.com/ken_tshizanga" class="sns-card" id="sns-note" target="_blank"><img class="app-icon" src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/8e/63/03/8e630351-e75d-0172-997a-2a0c4456b126/Icon-0-0-1x_U007epad-0-1-85-220.png/256x256bb.png" alt="" aria-hidden="true" width="56" height="56" loading="lazy"><div class="sns-name">note</div><div class="sns-handle" id="sns-note-handle">@ken_tshizanga</div></a>
+      <a href="https://podcasts.apple.com/jp/podcast/%E6%9D%BE%E6%9C%AC%E3%82%B1%E3%83%B3%E3%83%81%E3%82%B6%E3%83%B3%E3%82%AC/id1887278282" class="sns-card" id="sns-podcast-link" target="_blank"><img class="app-icon" src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/e8/0a/f3/e80af3fc-6a6b-35c6-1931-272745ed02e7/podcastsCalistoga-0-0-1x_U007epad-0-1-0-85-220.png/256x256bb.png" alt="" aria-hidden="true" width="56" height="56" loading="lazy"><div class="sns-name">Podcast</div><div class="sns-handle" id="sns-podcast-handle">松本ケンチザンガ</div></a>
     </div>
   </div>
 </section>
@@ -432,8 +426,8 @@ footer{background:var(--black);padding:36px 56px;display:flex;justify-content:sp
     <div class="shop-coming" id="shop-coming-text" style="display: block;">Coming Soon</div>
     <div class="product-grid" id="product-grid"></div>
     <div class="shop-links" id="shop-links">
-      <a href="https://kentshizanga.base.shop/" class="sns-card" id="shop-base" target="_blank"><span class="app-icon app-icon--shop" aria-hidden="true"></span><div class="sns-name">Online Store</div><div class="sns-handle">kentshizanga.base.shop</div></a>
-      <a href="https://www.instagram.com/kentshi_zanga/" class="sns-card" id="shop-apparel-ig" target="_blank"><span class="app-icon app-icon--instagram" aria-hidden="true"></span><div class="sns-name">Apparel Instagram</div><div class="sns-handle">@kentshi_zanga</div></a>
+      <a href="https://kentshizanga.base.shop/" class="sns-card" id="shop-base" target="_blank"><img class="app-icon" src="https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/34/77/dc/3477dc02-6c2c-bd62-1724-d613e7ecb5f2/AppIcon-0-0-1x_U007ephone-0-1-sRGB-85-220.png/256x256bb.png" alt="" aria-hidden="true" width="56" height="56" loading="lazy"><div class="sns-name">Online Store</div><div class="sns-handle">kentshizanga.base.shop</div></a>
+      <a href="https://www.instagram.com/kentshi_zanga/" class="sns-card" id="shop-apparel-ig" target="_blank"><img class="app-icon" src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/44/b0/cc/44b0cc3a-e91f-2824-d98f-3e5e095a73f3/Prod-0-0-1x_U007epad-0-0-0-1-0-0-sRGB-85-220.png/256x256bb.png" alt="" aria-hidden="true" width="56" height="56" loading="lazy"><div class="sns-name">Apparel Instagram</div><div class="sns-handle">@kentshi_zanga</div></a>
     </div>
   </div>
 </div>
