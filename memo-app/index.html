@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="icon.png" type="image/png">
+<link rel="apple-touch-icon" sizes="180x180" href="icon.png">
+<title>今月の利用額</title>
+<style>
+  :root{
+    --ink:#faf9f7;
+    --panel:#ffffff;
+    --panel-2:#f4f3f0;
+    --line:#e6e4df;
+    --gold:#33322e;
+    --gold-dim:#9a988f;
+    --text:#232220;
+    --sub:#9a988f;
+    --danger:#b5544a;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--ink);
+    color:var(--text);
+    font-family:"Hiragino Sans","Yu Gothic",-apple-system,BlinkMacSystemFont,sans-serif;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    padding:32px 16px 80px;
+  }
+  .app{
+    width:100%;
+    max-width:460px;
+  }
+  .month-bar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:20px;
+  }
+  .month-bar button{
+    background:none;
+    border:1px solid var(--line);
+    color:var(--sub);
+    width:36px;
+    height:36px;
+    border-radius:8px;
+    font-size:16px;
+    cursor:pointer;
+  }
+  .month-bar button:hover{ border-color:var(--gold-dim); color:var(--gold); }
+  .month-label{
+    font-size:15px;
+    color:var(--sub);
+    letter-spacing:.04em;
+  }
+
+  .ledger{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:28px 24px 22px;
+    position:relative;
+    overflow:hidden;
+    box-shadow:0 1px 3px rgba(35,34,32,.04), 0 12px 32px rgba(35,34,32,.05);
+  }
+  .ledger::before{
+    content:"";
+    position:absolute;
+    top:0; left:0; right:0;
+    height:3px;
+    background:linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity:.35;
+  }
+  .ledger-label{
+    font-size:12px;
+    color:var(--sub);
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    margin-bottom:6px;
+  }
+  .total{
+    font-family:"Courier New",monospace;
+    font-variant-numeric:tabular-nums;
+    font-size:44px;
+    font-weight:700;
+    color:var(--gold);
+    letter-spacing:.01em;
+    line-height:1.1;
+    word-break:break-all;
+  }
+  .total small{
+    font-size:20px;
+    color:var(--sub);
+    margin-left:4px;
+    font-weight:400;
+  }
+  .count-line{
+    margin-top:8px;
+    font-size:12px;
+    color:var(--sub);
+  }
+
+  .add-form{
+    margin-top:20px;
+    display:flex;
+    gap:8px;
+  }
+  .add-form input[type=number]{
+    flex:1;
+    min-width:0;
+    background:var(--panel-2);
+    border:1px solid var(--line);
+    color:var(--text);
+    font-size:16px;
+    padding:12px 14px;
+    border-radius:10px;
+    font-family:"Courier New",monospace;
+  }
+  .add-form input[type=number]:focus{
+    outline:none;
+    border-color:var(--gold-dim);
+  }
+  .add-form button{
+    background:var(--gold);
+    color:#ffffff;
+    border:none;
+    font-weight:700;
+    font-size:14px;
+    padding:0 20px;
+    border-radius:10px;
+    cursor:pointer;
+    white-space:nowrap;
+  }
+  .add-form button:active{ transform:translateY(1px); }
+  .add-form button:disabled{ opacity:.4; cursor:default; }
+
+  .memo-row{
+    margin-top:8px;
+  }
+  .memo-row input[type=text]{
+    width:100%;
+    background:var(--panel-2);
+    border:1px solid var(--line);
+    color:var(--text);
+    font-size:13px;
+    padding:9px 12px;
+    border-radius:10px;
+  }
+  .memo-row input[type=text]:focus{ outline:none; border-color:var(--gold-dim); }
+
+  .list-header{
+    margin:28px 0 8px;
+    font-size:12px;
+    color:var(--sub);
+    letter-spacing:.1em;
+    text-transform:uppercase;
+  }
+  .entries{
+    list-style:none;
+    margin:0;
+    padding:0;
+  }
+  .entry{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:12px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .entry:last-child{ border-bottom:none; }
+  .entry-main{ display:flex; flex-direction:column; gap:2px; min-width:0; }
+  .entry-amt{
+    font-family:"Courier New",monospace;
+    font-size:16px;
+    color:var(--text);
+  }
+  .entry-meta{
+    font-size:11px;
+    color:var(--sub);
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .entry-del{
+    background:none;
+    border:none;
+    color:var(--sub);
+    font-size:18px;
+    cursor:pointer;
+    padding:4px 8px;
+    line-height:1;
+  }
+  .entry-del:hover{ color:var(--danger); }
+
+  .empty{
+    padding:24px 0;
+    text-align:center;
+    color:var(--sub);
+    font-size:13px;
+  }
+
+  .status{
+    text-align:center;
+    font-size:11px;
+    color:var(--sub);
+    margin-top:14px;
+    min-height:14px;
+  }
+
+  /* --- 記録する人・ファイル作成（追加分） --- */
+  .owner-line{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+    margin-bottom:14px;
+    font-size:12px;
+    color:var(--sub);
+  }
+  .owner-line b{ color:var(--text); font-weight:700; }
+  .link-btn{
+    background:none;
+    border:none;
+    color:var(--sub);
+    font-size:12px;
+    text-decoration:underline;
+    cursor:pointer;
+    padding:4px 0;
+  }
+  .owner-edit{
+    display:none;
+    gap:8px;
+    margin-bottom:14px;
+  }
+  .owner-edit input{
+    flex:1;
+    min-width:0;
+    background:var(--panel-2);
+    border:1px solid var(--line);
+    color:var(--text);
+    font-size:15px;
+    padding:9px 12px;
+    border-radius:10px;
+  }
+  .owner-edit button, .export-btn{
+    background:var(--gold);
+    color:#ffffff;
+    border:none;
+    font-weight:700;
+    font-size:13px;
+    padding:10px 16px;
+    border-radius:10px;
+    cursor:pointer;
+    white-space:nowrap;
+  }
+  .export-box{
+    margin-top:24px;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:16px 18px;
+  }
+  .export-box p{
+    margin:0 0 12px;
+    font-size:12px;
+    color:var(--sub);
+    line-height:1.7;
+  }
+  .export-btn{ width:100%; padding:13px 16px; font-size:14px; }
+  .export-btn:disabled{ opacity:.4; cursor:default; }
+
+  /* --- 固定費セクション（追加分） --- */
+  .fixed-section{
+    margin-top:32px;
+  }
+  .fixed-section summary{
+    cursor:pointer;
+    font-size:12px;
+    color:var(--sub);
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    outline:none;
+  }
+  .fixed-desc{
+    font-size:12px;
+    color:var(--sub);
+    line-height:1.6;
+    margin:12px 0 14px;
+  }
+  .fixed-list{
+    list-style:none;
+    margin:0 0 4px;
+    padding:0;
+  }
+  .fixed-empty{
+    padding:12px 0;
+    text-align:center;
+    color:var(--sub);
+    font-size:12px;
+  }
+
+  /* --- 確認ダイアログ（追加分。ホーム画面アプリだと標準のconfirm()が出ないための自前実装） --- */
+  .confirm-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(35,34,32,.45);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    z-index:1000;
+  }
+  .confirm-box{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:22px 20px;
+    max-width:320px;
+    width:100%;
+    box-shadow:0 12px 32px rgba(35,34,32,.15);
+  }
+  .confirm-msg{
+    font-size:14px;
+    color:var(--text);
+    line-height:1.6;
+    margin-bottom:18px;
+  }
+  .confirm-actions{
+    display:flex;
+    gap:8px;
+    justify-content:flex-end;
+  }
+  .confirm-btn{
+    border:none;
+    border-radius:10px;
+    padding:10px 16px;
+    font-size:13px;
+    font-weight:700;
+    cursor:pointer;
+  }
+  .confirm-cancel{
+    background:var(--panel-2);
+    color:var(--text);
+  }
+  .confirm-ok{
+    background:var(--danger);
+    color:#ffffff;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="owner-line">
+    <span>記録する人：<b id="ownerName">未設定</b></span>
+    <button class="link-btn" id="ownerEditBtn">変更</button>
+  </div>
+  <div class="owner-edit" id="ownerEdit">
+    <input type="text" id="ownerInput" placeholder="例：妻、自分">
+    <button id="ownerSaveBtn">決定</button>
+  </div>
+
+  <div class="month-bar">
+    <button id="prevBtn" aria-label="前の月">&#8592;</button>
+    <div class="month-label" id="monthLabel">-</div>
+    <button id="nextBtn" aria-label="次の月">&#8594;</button>
+  </div>
+
+  <div class="ledger">
+    <div class="ledger-label">今月の利用額</div>
+    <div class="total"><span id="totalAmt">0</span><small>円</small></div>
+    <div class="count-line" id="countLine">0件</div>
+
+    <div class="add-form">
+      <input type="number" id="amountInput" inputmode="numeric" placeholder="金額" min="0" step="1">
+      <button id="addBtn">追加</button>
+    </div>
+    <div class="memo-row">
+      <input type="text" id="memoInput" placeholder="メモ（任意・例：Amazon 洗剤）">
+    </div>
+    <div class="status" id="statusLine"></div>
+  </div>
+
+  <div class="list-header">履歴</div>
+  <ul class="entries" id="entriesList"></ul>
+
+  <div class="export-box">
+    <p>月末に押すと、この月の記録をまとめたファイルができます。できたファイルを家計ノートに入れると、自動で仕分けて集計されます。</p>
+    <button class="export-btn" id="exportBtn">この月のファイルを作成</button>
+    <div class="status" id="exportStatus"></div>
+  </div>
+
+  <div class="fixed-section">
+    <details>
+      <summary>固定費の設定</summary>
+      <div class="fixed-desc">ここに登録しておくと、記録のない月を開いたときに自動で追加された状態から始まります。何も登録しなければ、これまで通り0円から始まります。</div>
+      <ul class="fixed-list" id="fixedList"></ul>
+      <div class="add-form">
+        <input type="number" id="fixedAmountInput" inputmode="numeric" placeholder="金額" min="0" step="1">
+        <button id="fixedAddBtn">追加</button>
+      </div>
+      <div class="memo-row">
+        <input type="text" id="fixedMemoInput" placeholder="メモ（例：家賃）">
+      </div>
+    </details>
+  </div>
+</div>
+
+<div id="confirmOverlay" class="confirm-overlay">
+  <div class="confirm-box">
+    <div class="confirm-msg" id="confirmMsg"></div>
+    <div class="confirm-actions">
+      <button id="confirmCancelBtn" class="confirm-btn confirm-cancel">キャンセル</button>
+      <button id="confirmOkBtn" class="confirm-btn confirm-ok">削除する</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let current = new Date();
+current.setDate(1);
+
+function monthKey(d){
+  return `expenses:${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+}
+function initKey(d){
+  return `expensesInit:${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+}
+function monthId(d){
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+}
+function monthLabelText(d){
+  return `${d.getFullYear()}年 ${d.getMonth()+1}月`;
+}
+function fmt(n){
+  return n.toLocaleString('ja-JP');
+}
+function fmtTime(ts){
+  const d = new Date(ts);
+  return `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+function isoDate(ts){
+  const d = new Date(ts);
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+async function loadEntries(){
+  try{
+    const raw = localStorage.getItem(monthKey(current));
+    return raw ? JSON.parse(raw) : [];
+  }catch(e){
+    return [];
+  }
+}
+
+async function saveEntries(entries){
+  try{
+    localStorage.setItem(monthKey(current), JSON.stringify(entries));
+    return true;
+  }catch(e){
+    return false;
+  }
+}
+
+async function loadFixedCosts(){
+  try{
+    const raw = localStorage.getItem('fixedCosts');
+    return raw ? JSON.parse(raw) : [];
+  }catch(e){
+    return [];
+  }
+}
+
+async function saveFixedCosts(list){
+  try{
+    localStorage.setItem('fixedCosts', JSON.stringify(list));
+    return true;
+  }catch(e){
+    return false;
+  }
+}
+
+// --- 記録する人（ファイルに書き込まれ、家計ノートで仕分けに使われる） ---
+function getOwner(){
+  try{ return localStorage.getItem('ownerName') || ''; }catch(e){ return ''; }
+}
+function renderOwner(){
+  const name = getOwner();
+  document.getElementById('ownerName').textContent = name || '未設定';
+  document.getElementById('ownerEdit').style.display = name ? 'none' : 'flex';
+  document.getElementById('ownerInput').value = name;
+}
+function saveOwner(){
+  const name = document.getElementById('ownerInput').value.trim();
+  if(!name) return;
+  try{ localStorage.setItem('ownerName', name); }catch(e){}
+  renderOwner();
+}
+
+// この月がまだ一度も開かれていなければ、固定費があれば入れておく
+async function ensureMonthSeeded(){
+  const key = initKey(current);
+  let alreadyInit = false;
+  try{
+    alreadyInit = localStorage.getItem(key) !== null;
+  }catch(e){
+    alreadyInit = false;
+  }
+  if(alreadyInit) return;
+
+  const entries = await loadEntries();
+  if(entries.length === 0){
+    const fixed = await loadFixedCosts();
+    if(fixed.length > 0){
+      const now = Date.now();
+      const seeded = fixed.map(f => ({
+        id: Date.now() + '-' + Math.random().toString(36).slice(2,7),
+        amount: f.amount,
+        memo: f.memo,
+        ts: now
+      }));
+      await saveEntries(seeded);
+    }
+  }
+  try{ localStorage.setItem(key, '1'); }catch(e){}
+}
+
+function showConfirm(msg){
+  return new Promise((resolve)=>{
+    const overlay = document.getElementById('confirmOverlay');
+    document.getElementById('confirmMsg').textContent = msg;
+    overlay.style.display = 'flex';
+
+    const okBtn = document.getElementById('confirmOkBtn');
+    const cancelBtn = document.getElementById('confirmCancelBtn');
+
+    function cleanup(result){
+      overlay.style.display = 'none';
+      okBtn.removeEventListener('click', onOk);
+      cancelBtn.removeEventListener('click', onCancel);
+      resolve(result);
+    }
+    function onOk(){ cleanup(true); }
+    function onCancel(){ cleanup(false); }
+
+    okBtn.addEventListener('click', onOk);
+    cancelBtn.addEventListener('click', onCancel);
+  });
+}
+
+function setStatus(msg, isErr, id){
+  const el = document.getElementById(id || 'statusLine');
+  el.textContent = msg;
+  el.style.color = isErr ? '#c15b4a' : '#8a97a3';
+  if(msg){
+    setTimeout(()=>{ if(el.textContent===msg) el.textContent=''; }, id ? 6000 : 2000);
+  }
+}
+
+async function render(){
+  await ensureMonthSeeded();
+  document.getElementById('monthLabel').textContent = monthLabelText(current);
+  const entries = await loadEntries();
+  entries.sort((a,b)=> b.ts - a.ts);
+
+  const total = entries.reduce((s,e)=> s + e.amount, 0);
+  document.getElementById('totalAmt').textContent = fmt(total);
+  document.getElementById('countLine').textContent = `${entries.length}件`;
+  document.getElementById('exportBtn').textContent = `${current.getMonth()+1}月分のファイルを作成`;
+
+  const list = document.getElementById('entriesList');
+  list.innerHTML = '';
+  if(entries.length === 0){
+    const li = document.createElement('li');
+    li.className = 'empty';
+    li.textContent = 'この月の記録はまだありません';
+    list.appendChild(li);
+    return;
+  }
+  for(const e of entries){
+    const li = document.createElement('li');
+    li.className = 'entry';
+    const main = document.createElement('div');
+    main.className = 'entry-main';
+    const amt = document.createElement('div');
+    amt.className = 'entry-amt';
+    amt.textContent = `¥${fmt(e.amount)}`;
+    const meta = document.createElement('div');
+    meta.className = 'entry-meta';
+    meta.textContent = `${fmtTime(e.ts)}${e.memo ? ' ・ ' + e.memo : ''}`;
+    main.appendChild(amt);
+    main.appendChild(meta);
+
+    const del = document.createElement('button');
+    del.className = 'entry-del';
+    del.textContent = '×';
+    del.addEventListener('click', async ()=>{
+      const label = `¥${fmt(e.amount)}${e.memo ? '（' + e.memo + '）' : ''}`;
+      const ok = await showConfirm(`${label} を削除しますか？この操作は取り消せません。`);
+      if(!ok) return;
+      const cur = await loadEntries();
+      const next = cur.filter(x=>x.id !== e.id);
+      await saveEntries(next);
+      render();
+    });
+
+    li.appendChild(main);
+    li.appendChild(del);
+    list.appendChild(li);
+  }
+}
+
+async function addEntry(){
+  const amountInput = document.getElementById('amountInput');
+  const memoInput = document.getElementById('memoInput');
+  const val = parseFloat(amountInput.value);
+  if(!val || val <= 0){
+    setStatus('金額を入力してください', true);
+    return;
+  }
+  const entries = await loadEntries();
+  entries.push({
+    id: Date.now() + '-' + Math.random().toString(36).slice(2,7),
+    amount: Math.round(val),
+    memo: memoInput.value.trim(),
+    ts: Date.now()
+  });
+  const ok = await saveEntries(entries);
+  if(ok){
+    amountInput.value = '';
+    memoInput.value = '';
+    setStatus('追加しました');
+    render();
+  }else{
+    setStatus('保存に失敗しました', true);
+  }
+  amountInput.focus();
+}
+
+// --- この月のファイルを作成（追加分） ---
+async function exportMonth(){
+  const owner = getOwner();
+  if(!owner){
+    document.getElementById('ownerEdit').style.display = 'flex';
+    document.getElementById('ownerInput').focus();
+    setStatus('先に「記録する人」の名前を入れてください', true, 'exportStatus');
+    return;
+  }
+  const entries = (await loadEntries()).slice().sort((a,b)=> a.ts - b.ts);
+  if(entries.length === 0){
+    setStatus('この月の記録はまだありません', true, 'exportStatus');
+    return;
+  }
+  const month = monthId(current);
+  const data = {
+    kind: 'kakeibo-memo',
+    version: 1,
+    owner: owner,
+    month: month,
+    createdAt: new Date().toISOString(),
+    total: entries.reduce((s,e)=> s + e.amount, 0),
+    entries: entries.map(e => ({ id: String(e.id), date: isoDate(e.ts), amount: e.amount, memo: e.memo || '' }))
+  };
+  const filename = `家計メモ_${owner}_${month}.json`;
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  let file = null;
+  try{ file = new File([blob], filename, { type: 'application/json' }); }catch(e){ file = null; }
+
+  if(file && navigator.canShare && navigator.canShare({ files: [file] })){
+    try{
+      await navigator.share({ files: [file], title: filename });
+      setStatus('ファイルを作成しました', false, 'exportStatus');
+      return;
+    }catch(e){
+      if(e && e.name === 'AbortError') return;
+    }
+  }
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=> URL.revokeObjectURL(url), 10000);
+  setStatus(`「${filename}」を保存しました`, false, 'exportStatus');
+}
+
+async function renderFixedList(){
+  const fixed = await loadFixedCosts();
+  const list = document.getElementById('fixedList');
+  list.innerHTML = '';
+  if(fixed.length === 0){
+    const li = document.createElement('li');
+    li.className = 'fixed-empty';
+    li.textContent = '固定費は登録されていません';
+    list.appendChild(li);
+    return;
+  }
+  for(const f of fixed){
+    const li = document.createElement('li');
+    li.className = 'entry';
+    const main = document.createElement('div');
+    main.className = 'entry-main';
+    const amt = document.createElement('div');
+    amt.className = 'entry-amt';
+    amt.textContent = `¥${fmt(f.amount)}`;
+    const meta = document.createElement('div');
+    meta.className = 'entry-meta';
+    meta.textContent = f.memo || '';
+    main.appendChild(amt);
+    main.appendChild(meta);
+
+    const del = document.createElement('button');
+    del.className = 'entry-del';
+    del.textContent = '×';
+    del.addEventListener('click', async ()=>{
+      const label = `¥${fmt(f.amount)}${f.memo ? '（' + f.memo + '）' : ''}`;
+      const ok = await showConfirm(`固定費 ${label} を削除しますか？`);
+      if(!ok) return;
+      const cur = await loadFixedCosts();
+      const next = cur.filter(x=>x.id !== f.id);
+      await saveFixedCosts(next);
+      renderFixedList();
+    });
+
+    li.appendChild(main);
+    li.appendChild(del);
+    list.appendChild(li);
+  }
+}
+
+async function addFixedCost(){
+  const amountInput = document.getElementById('fixedAmountInput');
+  const memoInput = document.getElementById('fixedMemoInput');
+  const val = parseFloat(amountInput.value);
+  if(!val || val <= 0){
+    return;
+  }
+  const list = await loadFixedCosts();
+  list.push({
+    id: Date.now() + '-' + Math.random().toString(36).slice(2,7),
+    amount: Math.round(val),
+    memo: memoInput.value.trim()
+  });
+  const ok = await saveFixedCosts(list);
+  if(ok){
+    amountInput.value = '';
+    memoInput.value = '';
+    renderFixedList();
+  }
+}
+
+document.getElementById('addBtn').addEventListener('click', addEntry);
+document.getElementById('amountInput').addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter') addEntry();
+});
+document.getElementById('memoInput').addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter') addEntry();
+});
+document.getElementById('prevBtn').addEventListener('click', ()=>{
+  current.setMonth(current.getMonth()-1);
+  render();
+});
+document.getElementById('nextBtn').addEventListener('click', ()=>{
+  current.setMonth(current.getMonth()+1);
+  render();
+});
+document.getElementById('fixedAddBtn').addEventListener('click', addFixedCost);
+document.getElementById('fixedAmountInput').addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter') addFixedCost();
+});
+document.getElementById('fixedMemoInput').addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter') addFixedCost();
+});
+document.getElementById('exportBtn').addEventListener('click', exportMonth);
+document.getElementById('ownerEditBtn').addEventListener('click', ()=>{
+  const box = document.getElementById('ownerEdit');
+  box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
+  if(box.style.display === 'flex') document.getElementById('ownerInput').focus();
+});
+document.getElementById('ownerSaveBtn').addEventListener('click', saveOwner);
+document.getElementById('ownerInput').addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter') saveOwner();
+});
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  });
+}
+
+renderOwner();
+render();
+renderFixedList();
+</script>
+</body>
+</html>
