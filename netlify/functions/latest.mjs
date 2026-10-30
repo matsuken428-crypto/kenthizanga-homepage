@@ -7,7 +7,13 @@ const NOTE_USER = "ken_tshizanga";
 const JLEAGUE_PLAYER_URL = "https://www.jleague.jp/player/1633289/";
 const UA = "Mozilla/5.0 (compatible; kentshizanga-homepage/1.0)";
 
-const isRadio = (title) => /^42Radio|ラジオ/.test(title);
+// Radio = title starts with "42Radio" or contains "ラジオ".
+// Titles containing "Podcast" also count as radio, for posts published from 2026-10-30 16:45 JST on
+// (older Podcast-titled posts stay in the note list, as the owner asked).
+const PODCAST_AS_RADIO_FROM = Date.parse("2026-10-30T16:45:00+09:00");
+const isRadio = (p) =>
+  /^42Radio|ラジオ/.test(p.title) ||
+  (/podcast/i.test(p.title) && Date.parse(p.publishAt || 0) >= PODCAST_AS_RADIO_FROM);
 const cleanRadioTitle = (title) => title.replace(/^42Radio\s*/, "").trim();
 
 async function fetchNote() {
@@ -20,15 +26,15 @@ async function fetchNote() {
     if (!res.ok) throw new Error(`note ${res.status}`);
     const json = await res.json();
     for (const c of json?.data?.contents ?? []) {
-      if (c?.name && c?.noteUrl) posts.push({ title: c.name.replace(/\s+/g, " ").trim(), url: c.noteUrl });
+      if (c?.name && c?.noteUrl) posts.push({ title: c.name.replace(/\s+/g, " ").trim(), url: c.noteUrl, publishAt: c.publishAt });
     }
-    const radio = posts.filter((p) => isRadio(p.title));
-    const note = posts.filter((p) => !isRadio(p.title));
+    const radio = posts.filter((p) => isRadio(p));
+    const note = posts.filter((p) => !isRadio(p));
     if ((radio.length >= 3 && note.length >= 3) || json?.data?.isLastPage) break;
   }
   return {
-    radio: posts.filter((p) => isRadio(p.title)).slice(0, 3).map((p) => ({ ...p, title: cleanRadioTitle(p.title) })),
-    note: posts.filter((p) => !isRadio(p.title)).slice(0, 3),
+    radio: posts.filter((p) => isRadio(p)).slice(0, 3).map((p) => ({ title: cleanRadioTitle(p.title), url: p.url })),
+    note: posts.filter((p) => !isRadio(p)).slice(0, 3).map((p) => ({ title: p.title, url: p.url })),
   };
 }
 
