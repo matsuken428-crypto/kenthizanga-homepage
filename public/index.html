@@ -79,7 +79,9 @@ section+section{border-top:1px solid var(--line)}
 .tab h2{display:inline-block;font-size:15px;font-weight:400;letter-spacing:.08em;text-transform:uppercase}
 .tab h2::after{content:"";display:block;width:28px;height:1.5px;background:var(--ink);margin:12px auto 0}
 .lead{font-size:clamp(22px,5.6vw,30px);font-weight:700;letter-spacing:-.01em;line-height:1.35;text-align:center;text-wrap:balance}
-.body-text{margin-top:24px;font-size:15px;line-height:2}
+.body-text{margin-top:28px;font-size:15px;line-height:2;display:grid;gap:14px}
+.jp span{display:inline-block}
+.profile dd.jp span{margin-right:.3em}
 .label{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--sub)}
 
 /* profile table */
@@ -117,7 +119,7 @@ section+section{border-top:1px solid var(--line)}
 .row:hover .arrow{transform:translateX(4px);color:var(--ink)}
 
 /* podcast */
-.podcast-desc{text-align:center;font-size:15px;line-height:2;white-space:pre-line}
+.podcast-desc{text-align:center;font-size:15px;line-height:2}
 .tags{text-align:center;margin-top:14px;font-size:12px;letter-spacing:.06em;color:var(--sub)}
 .pod-card{background:var(--tile);margin-top:36px;padding:32px 24px 28px}
 .pod-head{display:flex;align-items:center;gap:16px}
@@ -179,9 +181,9 @@ footer{border-top:1px solid var(--line);padding-block:56px calc(40px + env(safe-
       <li><a href="#stats">STATS</a></li>
       <li><a href="#note">NOTE</a></li>
       <li><a href="#podcast">PODCAST</a></li>
-      <li><a href="#sns">SNS</a></li>
       <li><a href="#shop">SHOP</a></li>
       <li><a href="#contact">CONTACT</a></li>
+      <li><a href="#sns">SNS</a></li>
     </ul>
   </nav>
 </header>
@@ -205,13 +207,13 @@ footer{border-top:1px solid var(--line);padding-block:56px calc(40px + env(safe-
     <div class="wrap">
       <div class="tab"><h2>About</h2></div>
       <p class="lead">J3からPremier Leagueへ</p>
-      <p class="body-text">埼玉県越谷市出身。日本人の母とコンゴ民主共和国の父を持つ。駒澤大学3年次にCBからFWへ転向し、わずか1年でプロ内定を勝ち取った異色の経歴を持つ。ブラウブリッツ秋田、奈良クラブを経て、現在はテゲバジャーロ宮崎のFWとしてプレー。サッカー以外でも自身のアパレルブランド「Kentshi zanga」を立ち上げ、活動の幅を広げている。目標は、England Premier Leagueでの2桁ゴール。</p>
+      <div class="body-text jp"><p><span>埼玉県越谷市出身。</span><span>日本人の母と、</span><span>コンゴ民主共和国の父を</span><span>持つ。</span></p><p><span>駒澤大学3年次に</span><span>CBからFWへ転向し、</span><span>わずか1年で</span><span>プロ内定を</span><span>勝ち取った、</span><span>異色の経歴の</span><span>持ち主。</span></p><p><span>ブラウブリッツ秋田、</span><span>奈良クラブを経て、</span><span>現在は</span><span>テゲバジャーロ宮崎の</span><span>FWとして</span><span>プレー。</span></p><p><span>サッカー以外でも、</span><span>自身のアパレルブランド</span><span>「Kentshi zanga」を</span><span>立ち上げ、</span><span>活動の幅を</span><span>広げている。</span></p><p><span>目標は、</span><span>England Premier Leagueでの</span><span>2桁ゴール。</span></p></div>
       <dl class="profile">
         <div><dt>Position</dt><dd>FW　#42</dd></div>
         <div><dt>Born</dt><dd>2002.03.14</dd></div>
         <div><dt>Height / Weight</dt><dd>192cm / 88kg</dd></div>
         <div><dt>Hometown</dt><dd>埼玉県越谷市</dd></div>
-        <div><dt>Career</dt><dd>駒澤大学 → ブラウブリッツ秋田 → 奈良クラブ → テゲバジャーロ宮崎</dd></div>
+        <div><dt>Career</dt><dd class="jp"><span>駒澤大学 →</span><span>ブラウブリッツ秋田 →</span><span>奈良クラブ →</span><span>テゲバジャーロ宮崎</span></dd></div>
         <div><dt>Brand</dt><dd><a href="https://kentshizanga.base.shop/" target="_blank" rel="noopener">Kentshi zanga</a></dd></div>
       </dl>
     </div>
@@ -239,12 +241,12 @@ footer{border-top:1px solid var(--line);padding-block:56px calc(40px + env(safe-
         <div>
           <h3>会員限定note</h3>
           <p class="freq">毎週更新 — ARTICLE</p>
-          <p>試合、トレーニング、日常の気づきなど、メンバーシップ限定の記事。</p>
+          <p class="jp"><span>試合、</span><span>トレーニング、</span><span>日常の気づきなど、</span><span>メンバーシップ限定の</span><span>記事。</span></p>
         </div>
         <div>
           <h3>ラジオ配信</h3>
           <p class="freq">毎週更新 — RADIO</p>
-          <p>メンバー限定のラジオ放送。試合後の本音、ここだけの話をお届けします。</p>
+          <p class="jp"><span>メンバー限定の</span><span>ラジオ放送。</span><span>試合後の本音、</span><span>ここだけの話を</span><span>お届けします。</span></p>
         </div>
       </div>
       <div class="center"><a class="btn solid" href="https://note.com/ken_tshizanga/membership/join" target="_blank" rel="noopener">メンバーシップに参加する</a></div>
@@ -269,8 +271,7 @@ footer{border-top:1px solid var(--line);padding-block:56px calc(40px + env(safe-
       <div class="tab"><h2>Podcast</h2></div>
       <p class="brand">INSIDE 42</p>
       <p class="brand-sub">The Podcast</p>
-      <p class="podcast-desc" style="margin-top:28px">日常のたわいもない話から、チームメイトなどゲストを招いての対談企画まで。
-松本ケンチザンガの人生の一部を、声を通してお届けします。</p>
+      <div class="podcast-desc jp" style="margin-top:28px"><p><span>日常のたわいもない話から、</span><span>チームメイトなど</span><span>ゲストを招いての</span><span>対談企画まで。</span></p><p><span>松本ケンチザンガの</span><span>人生の一部を、</span><span>声を通して</span><span>お届けします。</span></p></div>
       <p class="tags">日常トーク　/　対談企画　/　チームメイト　/　友人ゲスト</p>
       <div class="pod-card">
         <div class="pod-head">
@@ -288,16 +289,6 @@ footer{border-top:1px solid var(--line);padding-block:56px calc(40px + env(safe-
     </div>
   </section>
 
-  <section id="sns">
-    <div class="wrap">
-      <div class="tab"><h2>SNS</h2></div>
-      <div class="sns">
-        <a href="https://www.instagram.com/ken_tshizanga/" target="_blank" rel="noopener"><img class="app-icon" src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/44/b0/cc/44b0cc3a-e91f-2824-d98f-3e5e095a73f3/Prod-0-0-1x_U007epad-0-0-0-1-0-0-sRGB-85-220.png/256x256bb.png" alt="" width="56" height="56" loading="lazy"><span class="sns-name">Instagram</span><span class="sns-handle">@ken_tshizanga</span></a>
-        <a href="https://note.com/ken_tshizanga" target="_blank" rel="noopener"><img class="app-icon" src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/8e/63/03/8e630351-e75d-0172-997a-2a0c4456b126/Icon-0-0-1x_U007epad-0-1-85-220.png/256x256bb.png" alt="" width="56" height="56" loading="lazy"><span class="sns-name">note</span><span class="sns-handle">@ken_tshizanga</span></a>
-        <a href="https://podcasts.apple.com/jp/podcast/%E6%9D%BE%E6%9C%AC%E3%82%B1%E3%83%B3%E3%83%81%E3%82%B6%E3%83%B3%E3%82%AC/id1887278282" target="_blank" rel="noopener"><img class="app-icon" src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/e8/0a/f3/e80af3fc-6a6b-35c6-1931-272745ed02e7/podcastsCalistoga-0-0-1x_U007epad-0-1-0-85-220.png/256x256bb.png" alt="" width="56" height="56" loading="lazy"><span class="sns-name">Podcast</span><span class="sns-handle">松本ケンチザンガ</span></a>
-      </div>
-    </div>
-  </section>
 
   <section id="shop">
     <div class="wrap">
@@ -320,9 +311,19 @@ footer{border-top:1px solid var(--line);padding-block:56px calc(40px + env(safe-
     <div class="wrap">
       <div class="tab"><h2>Contact</h2></div>
       <p class="lead" style="margin-bottom:20px">お仕事のご依頼</p>
-      <p>スポンサー・メディア・イベント等、お仕事に関するご相談はこちらからお願いいたします。<br>内容を確認後、こちらからご返信いたします。</p>
+      <p class="jp"><span>スポンサー・</span><span>メディア・</span><span>イベント等、</span><span>お仕事に関する</span><span>ご相談は</span><span>こちらから</span><span>お願いいたします。</span></p><p class="jp"><span>内容を確認後、</span><span>こちらから</span><span>ご返信いたします。</span></p>
       <div class="center"><a class="btn solid" href="https://docs.google.com/forms/d/e/1FAIpQLScTaWKjfKd4SZ-ZEkzjVJ2QqUPTzVYggdxlijSm74K4BmGpig/viewform" target="_blank" rel="noopener">お問い合わせフォームへ</a></div>
-      <p class="note">いただいたお問い合わせには、順次ご返信いたします。</p>
+      <p class="note jp"><span>いただいたお問い合わせには、</span><span>順次ご返信いたします。</span></p>
+    </div>
+  </section>
+  <section id="sns">
+    <div class="wrap">
+      <div class="tab"><h2>SNS</h2></div>
+      <div class="sns">
+        <a href="https://www.instagram.com/ken_tshizanga/" target="_blank" rel="noopener"><img class="app-icon" src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/44/b0/cc/44b0cc3a-e91f-2824-d98f-3e5e095a73f3/Prod-0-0-1x_U007epad-0-0-0-1-0-0-sRGB-85-220.png/256x256bb.png" alt="" width="56" height="56" loading="lazy"><span class="sns-name">Instagram</span><span class="sns-handle">@ken_tshizanga</span></a>
+        <a href="https://note.com/ken_tshizanga" target="_blank" rel="noopener"><img class="app-icon" src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/8e/63/03/8e630351-e75d-0172-997a-2a0c4456b126/Icon-0-0-1x_U007epad-0-1-85-220.png/256x256bb.png" alt="" width="56" height="56" loading="lazy"><span class="sns-name">note</span><span class="sns-handle">@ken_tshizanga</span></a>
+        <a href="https://podcasts.apple.com/jp/podcast/%E6%9D%BE%E6%9C%AC%E3%82%B1%E3%83%B3%E3%83%81%E3%82%B6%E3%83%B3%E3%82%AC/id1887278282" target="_blank" rel="noopener"><img class="app-icon" src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/e8/0a/f3/e80af3fc-6a6b-35c6-1931-272745ed02e7/podcastsCalistoga-0-0-1x_U007epad-0-1-0-85-220.png/256x256bb.png" alt="" width="56" height="56" loading="lazy"><span class="sns-name">Podcast</span><span class="sns-handle">松本ケンチザンガ</span></a>
+      </div>
     </div>
   </section>
 </main>
@@ -337,6 +338,7 @@ footer{border-top:1px solid var(--line);padding-block:56px calc(40px + env(safe-
         <li><a href="#podcast">PODCAST</a></li>
         <li><a href="#shop">SHOP</a></li>
         <li><a href="#contact">CONTACT</a></li>
+        <li><a href="#sns">SNS</a></li>
       </ul>
       <div>
         <p class="head">INSTAGRAM</p>
