@@ -19,7 +19,7 @@ import sys
 
 
 def set_text(doc, el_id, value):
-    pat = re.compile(r'(<span[^>]*\bid="%s"[^>]*>)(.*?)(</span>)' % re.escape(el_id), re.S)
+    pat = re.compile(r'(<(?:span|p)[^>]*\bid="%s"[^>]*>)(.*?)(</(?:span|p)>)' % re.escape(el_id), re.S)
     doc, n = pat.subn(lambda m: m.group(1) + html.escape(str(value), quote=False) + m.group(3), doc, count=1)
     if n != 1:
         raise SystemExit(f"text element not found: {el_id}")
@@ -37,9 +37,7 @@ def set_href(doc, el_id, url):
 def set_input(doc, el_id, value):
     pat = re.compile(r'(<input[^>]*\bid="%s"[^>]*\bvalue=")([^"]*)(")' % re.escape(el_id))
     doc, n = pat.subn(lambda m: m.group(1) + html.escape(str(value)) + m.group(3), doc, count=1)
-    if n != 1:
-        raise SystemExit(f"edit input not found: {el_id}")
-    return doc
+    return doc  # edit mode was removed in the 2026-10 redesign; missing inputs are fine
 
 
 def main():
