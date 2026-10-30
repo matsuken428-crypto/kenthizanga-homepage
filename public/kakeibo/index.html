@@ -4,15 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="robots" content="noindex">
-<title>家計ノート</title>
-<meta name="apple-mobile-web-app-title" content="家計ノート">
+<title>家計簿</title>
+<meta name="apple-mobile-web-app-title" content="家計簿">
 <link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
-  // ホーム画面のアイコンから開いたときだけ、すぐに家計ノートへ移動する（Safariで普通に開いたときは移動しない）
+  // ホーム画面のアイコンから開いたときだけ、すぐに家計簿へ移動する（Safariで普通に開いたときは移動しない）
   var NOTE_URL = "https://claude.ai/artifact/59GYBu1W22iNxh3ta4pGjT";
   var fromHome = window.navigator.standalone === true || (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches);
   if (fromHome) { location.replace(NOTE_URL); }
@@ -35,14 +35,14 @@
 <body>
   <div class="card">
     <img src="icon-180.png" alt="">
-    <h1>家計ノート</h1>
-    <p>ホーム画面に追加すると、このアイコンから家計ノートが開きます。</p>
+    <h1>家計簿</h1>
+    <p>ホーム画面に追加すると、このアイコンから家計簿が開きます。</p>
     <ol>
       <li>下の<b>共有ボタン</b>（四角から矢印が出ているマーク）を押す</li>
       <li><b>「ホーム画面に追加」</b>を押す</li>
       <li>右上の<b>「追加」</b>を押す</li>
     </ol>
-    <a class="open" id="openLink" href="https://claude.ai/artifact/59GYBu1W22iNxh3ta4pGjT">家計ノートを開く</a>
+    <a class="open" id="openLink" href="https://claude.ai/artifact/59GYBu1W22iNxh3ta4pGjT">家計簿を開く</a>
   </div>
 </body>
 </html>
