@@ -38,6 +38,14 @@ async function fetchNote() {
   };
 }
 
+// League season that is running now. From 2026/27 the J.League runs autumn→spring,
+// so a season starts in summer (July 1 is used as the cut-off).
+function seasonStart(now = new Date()) {
+  const jst = new Date(now.getTime() + 9 * 3600e3);
+  const y = jst.getUTCMonth() >= 6 ? jst.getUTCFullYear() : jst.getUTCFullYear() - 1;
+  return Date.UTC(y, 6, 1);
+}
+
 async function fetchStats() {
   const res = await fetch(JLEAGUE_PLAYER_URL, { headers: { "user-agent": UA, accept: "text/html" } });
   if (!res.ok) throw new Error(`jleague ${res.status}`);
@@ -46,7 +54,35 @@ async function fetchStats() {
     /"playerInfo":\{"numberOfAppearances":"?(\d+)"?,"goals":"?(\d+)"?,"assists":"?(\d+)"?/
   );
   if (!m) throw new Error("jleague stats not found");
-  return { matches: Number(m[1]), goals: Number(m[2]), assists: Number(m[3]) };
+  const stats = { matches: Number(m[1]), goals: Number(m[2]), assists: Number(m[3]) };
+
+  // The summary numbers above are refreshed by the J.League only every few days, but the
+  // match-by-match history ("playerHistory") is updated right after each game.
+  // Count this season's league games from the history and use whichever is higher.
+  try {
+    const i = html.indexOf('"playerHistory":[');
+    if (i >= 0) {
+      let depth = 0, j = i + 16;
+      for (; j < html.length; j++) {
+        if (html[j] === "[") depth++;
+        else if (html[j] === "]" && --depth === 0) break;
+      }
+      const history = JSON.parse(html.slice(i + 16, j + 1));
+      const from = seasonStart();
+      const league = history.filter((h) => {
+        const d = String(h.date || "").match(/^(\d{2})\/(\d{1,2})\/(\d{1,2})$/);
+        if (!d || !/明治安田/.test(h.competition || "")) return false;
+        return Date.UTC(2000 + Number(d[1]), Number(d[2]) - 1, Number(d[3])) >= from && h.appearance;
+      });
+      const matches = league.length;
+      const goals = league.reduce((a, h) => a + (Number(h.goals) || 0), 0);
+      if (matches > stats.matches) stats.matches = matches;
+      if (goals > stats.goals) stats.goals = goals;
+    }
+  } catch {
+    // keep the summary numbers
+  }
+  return stats;
 }
 
 const PODCAST_ID = "1887278282";
